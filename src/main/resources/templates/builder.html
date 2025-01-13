@@ -42,7 +42,7 @@
         
         <div id="console">
             <div id="field">
-                <canvas height="450" width="350" id="players"></canvas>
+                <canvas height="450" width="350" id="pieces"></canvas>
             </div>
             <div id="team">
                 <h1>Team</h1>
@@ -52,29 +52,29 @@
             </div>
         </div>
         <script>
-            var players = [];
-            const canvas = document.getElementById("players");
+            var pieces = [];
+            const canvas = document.getElementById("pieces");
             const ctx = canvas.getContext("2d");
-            let draggingPlayer = null;
+            let draggingPiece = null;
             
             drawFootball();
 
             function drawFootball(){
-                drawPlayer(125, 200, 5, "white", "black")
-                players.push({x:125, y:200, size:5, color:"white", outline:"black"});
+                drawPiece(125, 200, 5, "white", "black")
+                pieces.push({x:125, y:200, size:5, color:"white", outline:"black"});
             }
 
             function addRed(){
-                drawPlayer(50, 100, 10, "red", "white");
-                players.push({x:50,y:100,size:10, color:"red", outline:"white"});
+                drawPiece(50, 100, 10, "red", "white");
+                pieces.push({x:50,y:100,size:10, color:"red", outline:"white"});
             }
             function addBlue(){
-                drawPlayer(50, 370, 10, "blue", "white");
-                players.push({x:50,y:370,size:10, color:"blue", outline:"white"});
+                drawPiece(50, 370, 10, "blue", "white");
+                pieces.push({x:50,y:370,size:10, color:"blue", outline:"white"});
 
             }
 
-            function drawPlayer(x, y, size, colour, outline){
+            function drawPiece(x, y, size, colour, outline){
                 ctx.beginPath();
                 ctx.arc(x, y, size, 0, 2 * Math.PI);
                 ctx.fillStyle = colour;
@@ -84,31 +84,31 @@
                 ctx.stroke();
             }
 
-            function drawAllPlayers() {
+            function drawAllPieces() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                players.forEach(player => drawPlayer(player.x, player.y, player.size, player.color, player.outline));
+                pieces.forEach(piece => drawPiece(piece.x, piece.y, piece.size, piece.color, piece.outline));
             }
 
             canvas.addEventListener("mousedown", e => {
                 const {mouseX, mouseY} = getMousePos(e);
-                draggingPlayer = players.find(player => {
-                    const dx = mouseX - player.x;
-                    const dy = mouseY - player.y;
-                    return Math.sqrt(dx*dx + dy*dy) <= player.size;
+                draggingPiece = pieces.find(piece => {
+                    const dx = mouseX - piece.x;
+                    const dy = mouseY - piece.y;
+                    return Math.sqrt(dx*dx + dy*dy) <= piece.size;
                 });
             });
 
             canvas.addEventListener("mousemove", e => {
-                if(draggingPlayer){
+                if(draggingPiece){
                     const {mouseX, mouseY} = getMousePos(e);
-                    draggingPlayer.x = mouseX;
-                    draggingPlayer.y = mouseY;
-                    drawAllPlayers();
+                    draggingPiece.x = mouseX;
+                    draggingPiece.y = mouseY;
+                    drawAllPieces();
                 }
             });
 
             canvas.addEventListener("mouseup", () => {
-                draggingPlayer = null;
+                draggingPiece = null;
             });
             
             function getMousePos(e) {
