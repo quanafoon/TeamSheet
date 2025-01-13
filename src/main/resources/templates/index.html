@@ -1,9 +1,37 @@
 <!DOCTYPE html>
 
     <head>
-        
+        <title>Home</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">    
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head>
 
     <body>
+        <style>
+            nav{
+                background-color:#4ebab5;
+            }
+            #container{
+                display:flex;
+                height:100vh;
+                width:100vw;
+                justify-content:center;
+                margin:0;
+            }
+            body{
+                overflow:hidden;
+            }
+        </style>
+        <nav>
+            <div class="nav-wrapper">
+                <a class="brand-logo center" href="/"><b>Home</b></a>
+            </div>
+        </nav>
+        <div id="container" class="valign-wrapper">
+            <form action="/login" method="GET">
+                <button id="login" class="btn-large">Login</button>
+            </form>
+        </div>
+        
     </body>
 </html>

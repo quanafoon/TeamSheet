@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+    <head>
+        <title>Builder</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">    
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+
+    <body>
+        <style>
+            
+            nav{
+                background-color:#4ebab5;
+            }
+            #console{
+                display:flex;
+                
+                height:80vh;
+                width:80vw;
+            }
+            #field{
+                background-image:url(images/field.png);
+                background-size:contain;
+                background-repeat:no-repeat;
+                height:100%;
+                width:50%;
+                margin-top:10vh;
+
+            }
+            #team{
+                height:100%;
+                color:black;
+            }
+            
+            
+        </style>
+        <nav>
+            <div class="nav-wrapper">
+                <a class="brand-logo center" href="/"><b>Squad Builder</b></a>
+            </div>
+        </nav>
+        
+        <div id="console">
+            <div id="field">
+                <canvas height="450" width="350" id="players"></canvas>
+            </div>
+            <div id="team">
+                <h1>Team</h1>
+                <button onclick="addRed()" class="btn-large">Add Red Player</button>
+                <button onclick="addBlue()" class="btn-large">Add Blue Player</button>
+
+            </div>
+        </div>
+        <script>
+            var players = [];
+            const canvas = document.getElementById("players");
+            const ctx = canvas.getContext("2d");
+            let draggingPlayer = null;
+            
+            drawFootball();
+
+            function drawFootball(){
+                drawPlayer(125, 200, 5, "white", "black")
+                players.push({x:125, y:200, size:5, color:"white", outline:"black"});
+            }
+
+            function addRed(){
+                drawPlayer(50, 100, 10, "red", "white");
+                players.push({x:50,y:100,size:10, color:"red", outline:"white"});
+            }
+            function addBlue(){
+                drawPlayer(50, 370, 10, "blue", "white");
+                players.push({x:50,y:370,size:10, color:"blue", outline:"white"});
+
+            }
+
+            function drawPlayer(x, y, size, colour, outline){
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, 2 * Math.PI);
+                ctx.fillStyle = colour;
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = outline;
+                ctx.stroke();
+            }
+
+            function drawAllPlayers() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                players.forEach(player => drawPlayer(player.x, player.y, player.size, player.color, player.outline));
+            }
+
+            canvas.addEventListener("mousedown", e => {
+                const {mouseX, mouseY} = getMousePos(e);
+                draggingPlayer = players.find(player => {
+                    const dx = mouseX - player.x;
+                    const dy = mouseY - player.y;
+                    return Math.sqrt(dx*dx + dy*dy) <= player.size;
+                });
+            });
+
+            canvas.addEventListener("mousemove", e => {
+                if(draggingPlayer){
+                    const {mouseX, mouseY} = getMousePos(e);
+                    draggingPlayer.x = mouseX;
+                    draggingPlayer.y = mouseY;
+                    drawAllPlayers();
+                }
+            });
+
+            canvas.addEventListener("mouseup", () => {
+                draggingPlayer = null;
+            });
+            
+            function getMousePos(e) {
+                const rect = canvas.getBoundingClientRect();
+                return {
+                    mouseX: e.clientX - rect.left,
+                    mouseY: e.clientY - rect.top
+                };
+            }
+        </script>
+    </body>
+</html>
