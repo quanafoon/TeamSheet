@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
     <head>
         <title>Home</title>
@@ -17,21 +18,74 @@
                 width:100vw;
                 justify-content:center;
                 margin:0;
+                text-align:center;
             }
             body{
                 overflow:hidden;
             }
+            .hidden{
+                display:none;
+            }
+            .formField{
+                text-align:center;
+            }
+            
         </style>
         <nav>
             <div class="nav-wrapper">
                 <a class="brand-logo center" href="/"><b>Home</b></a>
             </div>
         </nav>
-        <div id="container" class="valign-wrapper">
-            <form action="/login" method="GET">
-                <button id="login" class="btn-large">Login</button>
-            </form>
+        
+        <div id="container">
+            
+            <div id="loginSection">
+                <h1> Login </h1>
+                <form th:action="@{/login}" th:object="${user}" method="post" class= "loginForm" >
+                        <input class="formField" style="text-align:center" type="text" id="username" th:field="*{username}" placeholder="username" required>
+                    <div class="input-field">
+                        <input class="formField" type="password" id="password" th:field="*{password}" placeholder="password" required>
+                    </div>
+                    <button type="submit" style="background-color: #38da84" class="btn" id="loginBtn">Login</button>
+                </form>
+                <div style="display: flex; margin-top:10vh">
+                    <p class="simpleText"> Don't have an account? </p>
+                    <button onclick="signupPressed()" style="margin-left: 1vw; background-color: #38da84;" class="btn-small" id="btn-s"> Sign up </button>
+                </div>
+            </div>
+            
+            <div id="signUpSection" class="hidden">
+                <h1> Sign up </h1>
+                <form th:action="@{/signup}" th:object="${user}" method="post" class= "loginForm" >
+                    <div class="input-field">
+                        <input class="formField" style="text-align:center" type="text" id="signup-username" th:field="*{username}" placeholder="username" required>
+                    </div>
+                    <div class="input-field">
+                        <input class="formField" type="password" id="signup-password" th:field="*{password}" placeholder="password" required>
+                    </div>
+                    <button type="submit" style="background-color: #38da84" class="btn" id="loginBtn">Sign Up</button>
+                </form>
+                <div style="display: flex; margin-top:10vh">
+                    <p class="simpleText">Already have an account? </p>
+                    <button onclick="loginPressed()" style="margin-left: 1vw; background-color: #38da84;" class="btn-small" id="btn-l"> Login </button>
+                </div>
+            </div>
+
         </div>
         
+        <script>
+            const login = document.getElementById("loginSection");
+            const signup = document.getElementById("signUpSection");
+
+            function signupPressed(){
+                login.classList.add("hidden");
+                signup.classList.remove("hidden")
+            }
+            function loginPressed(){
+                signup.classList.add("hidden");
+                login.classList.remove("hidden")
+            }
+        </script>
+
     </body>
 </html>
