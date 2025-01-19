@@ -1,11 +1,17 @@
 package team.sheet.demo.models;
 
+import java.util.List;
+
 import org.mindrot.jbcrypt.BCrypt;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -18,6 +24,10 @@ public class User {
     private String password;
     private String firstname;
     private String lastname;
+
+    @OneToMany(mappedBy = "user", cascade=CascadeType.ALL)
+    @JsonManagedReference
+    private List<Team> teams;
     
 
     public User(){
@@ -29,13 +39,15 @@ public class User {
         this.firstname = firstname;
         this.lastname = lastname;
     }
+    public Long getId() {
+        return id;
+    }
     public String getUsername() {
         return username;
     }
     public void setUsername(String username) {
         this.username = username;
     }
-    
     public String getPassword(){
         return password;
     }
@@ -54,11 +66,15 @@ public class User {
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
-
+    public List<Team> getTeams() {
+        return teams;
+    }
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
+    }
     public static String hashPassword(String password){
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
-
     public static boolean checkPassword(String password, String hashedPassword){
         return BCrypt.checkpw(password, hashedPassword);
     }

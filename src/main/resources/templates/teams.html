@@ -5,43 +5,74 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">    
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
 <body>
 
     <style>
         .container{
+            padding:15vh;
             display:flex;
             height: 50vh;
-            width:100vw;
+            width:90vw;
             justify-content:center;
             margin: 0 auto;
+            flex-wrap:wrap;
         }
         #addCard{
-            position:relative;
-            height:60%;
-            width:20%;
+            height:40vh;
+            width:15vw;
+            align-items:center;
+            justify-content:center;
+            display:flex;
+            cursor:pointer;
+            margin-left:2vw;
+        }
+        nav{
+            background-color:#5f5ec2;
+            position:fixed;
+            z-index:1000;
+        }
+        #single{
+            margin-left:2vw;
+            height:40vh;
+            width:15vw;
             align-items:center;
             justify-content:center;
             display:flex;
             cursor:pointer;
         }
-        #header{
-            width:100vw;
-            text-align:center;
+        li{
+            margin-right:10px;
         }
         
     </style>
-
-    <div id="header">
-        <h1>Teams</h1>
-    </div>
+    <nav>
+        <div class="nav-wrapper">
+            <div class="brand-logo center">
+                <b>Teams</b>
+            </div>  
+            <ul id="nav-mobile" class="right">
+                <li><a onclick="select()" style="background-color:#28b97d" class="btn"> New <i class="material-icons right"> add_circle </i></a></li>
+                <li><a href="/logout" style="background-color:#e12828"class="btn"> Log out </a></li>
+            </ul>
+        </div>
+    </nav>
     <div class="container">
         <div onclick="select()" id="addCard" class="card">
             <div class="card-content">
                 <i class="material-icons large"> add_circle </i>
             </div>
         </div>
+        <div th:if="${user != null}" th:each="team : ${teams}"> 
+            <div onclick="select()" id="single" class="card">
+                <div class="card-content">
+                    <p th:text="${team.name}"></p>
+                </div> 
+            </div>
+        </div>
+        
     </div>
     <div id="flashed-message" th:text="${message}" style= "display:none"></div>
 
