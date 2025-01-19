@@ -7,10 +7,10 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head>
 
-    <body>
+    <body >
         <style>
             nav{
-                background-color:#4ebab5;
+                background-color:#5f5ec2;
             }
             #container{
                 display:flex;
@@ -19,6 +19,9 @@
                 justify-content:center;
                 margin:0;
                 text-align:center;
+                background-image:url(images/dark-blue.jpg); 
+                background-size:cover; 
+                color:white;
             }
             body{
                 overflow:hidden;
@@ -28,12 +31,18 @@
             }
             .formField{
                 text-align:center;
+                color:white;
+            }
+            .loginForm{
+                width:30vw;
+                margin:0 auto;
             }
             
         </style>
+        
         <nav>
             <div class="nav-wrapper">
-                <a class="brand-logo center" href="/"><b>Home</b></a>
+                <a class="brand-logo center" href="/"><b>Team Sheets</b></a>
             </div>
         </nav>
         
@@ -41,11 +50,9 @@
             
             <div id="loginSection">
                 <h1> Login </h1>
-                <form th:action="@{/login}" th:object="${user}" method="post" class= "loginForm" >
-                        <input class="formField" style="text-align:center" type="text" id="username" th:field="*{username}" placeholder="username" required>
-                    <div class="input-field">
-                        <input class="formField" type="password" id="password" th:field="*{password}" placeholder="password" required>
-                    </div>
+                <form th:action="@{/login}" th:object="${user}" method="post" class= "loginForm">
+                    <input class="formField" style="text-align:center" type="text" id="username" th:field="*{username}" placeholder="username" required>
+                    <input class="formField" type="password" id="password" th:field="*{password}" placeholder="password" required>
                     <button type="submit" style="background-color: #38da84" class="btn" id="loginBtn">Login</button>
                 </form>
                 <div style="display: flex; margin-top:10vh">
@@ -56,13 +63,11 @@
             
             <div id="signUpSection" class="hidden">
                 <h1> Sign up </h1>
-                <form th:action="@{/signup}" th:object="${user}" method="post" class= "loginForm" >
-                    <div class="input-field">
-                        <input class="formField" style="text-align:center" type="text" id="signup-username" th:field="*{username}" placeholder="username" required>
-                    </div>
-                    <div class="input-field">
+                <form th:action="@{/signup}" th:object="${user}" method="post" class= "loginForm">
+                        <input class="formField" type="text" id="signup-username" th:field="*{username}" placeholder="username" required>
                         <input class="formField" type="password" id="signup-password" th:field="*{password}" placeholder="password" required>
-                    </div>
+                        <input class="formField" type="text" id="signup-firstname" placeholder="firstname" th:field="*{firstname}" required>
+                        <input class="formField" type="text" id="signup-lastname" placeholder="lastname" th:field="*{lastname}" required>
                     <button type="submit" style="background-color: #38da84" class="btn" id="loginBtn">Sign Up</button>
                 </form>
                 <div style="display: flex; margin-top:10vh">
@@ -70,9 +75,11 @@
                     <button onclick="loginPressed()" style="margin-left: 1vw; background-color: #38da84;" class="btn-small" id="btn-l"> Login </button>
                 </div>
             </div>
-
         </div>
-        
+        <div id="flashed-message" th:text="${message}" style="display:none"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
         <script>
             const login = document.getElementById("loginSection");
             const signup = document.getElementById("signUpSection");
@@ -85,7 +92,18 @@
                 signup.classList.add("hidden");
                 login.classList.remove("hidden")
             }
+
         </script>
 
+        <script>
+            M.AutoInit();
+            var message = document.getElementById("flashed-message").textContent;
+            if(message){
+                M.toast({html : message})
+                if(message==="Username already exists"){
+                    signupPressed();
+                }
+            }
+        </script>
     </body>
 </html>

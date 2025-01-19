@@ -26,8 +26,6 @@ public class Users {
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> users() {
-        User user = new User("quan", "pass", "quan", "afoon");
-        userRepository.save(user);
         List<User> users = userRepository.findAll();
         return ResponseEntity.ok(users);
     }
@@ -36,6 +34,8 @@ public class Users {
     public ResponseEntity<Map<String, String>> init() {
         userRepository.deleteAll();
         jdbcTemplate.execute("ALTER TABLE users ALTER COLUMN id RESTART WITH 1");
+        User user = new User("quan", "pass", "quan", "afoon");
+        userRepository.save(user);
         Map<String, String> response = new HashMap<>();
         response.put("message", "db initialized");
         return ResponseEntity.ok(response);

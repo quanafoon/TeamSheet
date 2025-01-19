@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -42,10 +43,19 @@
             </div>
         </div>
     </div>
+    <div id="flashed-message" th:text="${message}" style= "display:none"></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
         function select(){
             window.location.href = "/builder";
+        }
+    </script>
+    <script>
+        M.AutoInit();
+        var message = document.getElementById("flashed-message").textContent;
+        if(message){
+            M.toast({html : message})
         }
     </script>
 </body>
