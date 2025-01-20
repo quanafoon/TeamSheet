@@ -54,22 +54,24 @@
                 <b>Teams</b>
             </div>  
             <ul id="nav-mobile" class="right">
-                <li><a onclick="select()" style="background-color:#28b97d" class="btn"> New <i class="material-icons right"> add_circle </i></a></li>
+                <li><a onclick="select(this)" th:attr="data-id=0" style="background-color:#28b97d" class="btn"> New <i class="material-icons right"> add_circle </i></a></li>
                 <li><a href="/logout" style="background-color:#e12828"class="btn"> Log out </a></li>
             </ul>
         </div>
     </nav>
     <div class="container">
-        <div onclick="select()" id="addCard" class="card">
+        <div onclick="select(this)" id="addCard" class="card" th:attr="data-id=0">
             <div class="card-content">
                 <i class="material-icons large"> add_circle </i>
             </div>
         </div>
         <div th:if="${user != null}" th:each="team : ${teams}"> 
-            <div onclick="select()" id="single" class="card">
+            <div onclick="select(this)" id="single" class="card" th:attr="data-id=${team.id}">
                 <div class="card-content">
+                    <p id="ID" th:text="${team.id}"></p>
                     <p th:text="${team.name}"></p>
-                </div> 
+                    <p th:text="${team.description}"></p>
+                </div>
             </div>
         </div>
         
@@ -78,15 +80,16 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        function select(){
-            window.location.href = "/builder";
-        }
-    </script>
-    <script>
         M.AutoInit();
         var message = document.getElementById("flashed-message").textContent;
         if(message){
             M.toast({html : message})
+        }
+    </script>
+    <script>
+        function select(team){
+            const id = team.getAttribute("data-id");
+            window.location.href = `/builder?id=${id}`;
         }
     </script>
 </body>
