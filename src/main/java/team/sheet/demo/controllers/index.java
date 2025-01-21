@@ -18,7 +18,6 @@ import team.sheet.demo.models.Team;
 import team.sheet.demo.models.User;
 import team.sheet.demo.repositories.TeamRepository;
 import team.sheet.demo.repositories.UserRepository;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -99,33 +98,6 @@ public class Index {
             redirectAttributes.addFlashAttribute("message", "Logged out");
         }
         return "redirect:/";
-    }
-    
-    @GetMapping("/builder")
-    public String builder(@RequestParam Long id, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
-        User user = (User) session.getAttribute("loggedInUser");
-        if(user == null){
-            redirectAttributes.addFlashAttribute("message", "Please Login");
-            return "redirect:/";
-        }
-        if(id==0){
-            Team team = new Team("newTeam", "this is a new team");
-            model.addAttribute("team", team);
-            return "builder";
-        }
-        Optional<Team> optionalTeam = teamRepository.findById(id);
-        if(optionalTeam.isPresent()){
-            Team team = optionalTeam.get();
-            List<Team> teams = teamRepository.findByUserId(user.getId());
-            if(!teams.contains(team)){
-                redirectAttributes.addFlashAttribute("message", "Select a team");
-                return "redirect:/teams";
-            }
-            model.addAttribute("team", team);
-            return "builder";
-        }
-        redirectAttributes.addFlashAttribute("message", "Select a team");
-        return "redirect:/teams";
     }
     
 }

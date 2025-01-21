@@ -1,7 +1,11 @@
 package team.sheet.demo.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,6 +29,10 @@ public class Team {
     @JoinColumn(name="user_id")
     @JsonBackReference
     private User user;
+
+    @OneToMany(mappedBy = "team", cascade=CascadeType.ALL)
+    @JsonManagedReference
+    private List<Piece> pieces;
 
     public Team(){
 
@@ -68,6 +77,14 @@ public class Team {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Piece> getPieces() {
+        return pieces;
+    }
+
+    public void setPieces(List<Piece> pieces) {
+        this.pieces = pieces;
     }
 
 }

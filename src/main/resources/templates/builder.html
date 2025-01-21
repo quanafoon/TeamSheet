@@ -41,7 +41,7 @@
                     <b>Squad Builder</b>
                 </div>  
                 <ul id="nav-mobile" class="right">
-                    <li><a style="background-color:#28b97d" class="btn"> Save </a></li>
+                    <li><a onclick="save()" style="background-color:#28b97d" class="btn"> Save </a></li>
                     <li><a href="/logout" style="background-color:#e12828"class="btn"> Log out </a></li>
                 </ul>
             </div>
@@ -123,6 +123,23 @@
                     mouseX: e.clientX - rect.left,
                     mouseY: e.clientY - rect.top
                 };
+            }
+
+            function save() {
+                fetch("/save", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(pieces),
+                })
+                .then(response => {
+                    return response.text();
+                })
+                .then(loc => {
+                    window.location.href = `/${loc}`;
+                })
+                .catch(error => console.error("Error:", error));
             }
         </script>
     </body>
