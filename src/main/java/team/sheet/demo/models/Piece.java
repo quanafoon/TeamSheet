@@ -72,7 +72,7 @@ public class Piece {
     public void setSize(int size) {
         this.size = size;
     }
-    
+
     public String getColor() {
         return color;
     }

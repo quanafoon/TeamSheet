@@ -57,6 +57,8 @@
                 <button onclick="addBlue()" class="btn-large">Add Blue Player</button>
             </div>
         </div>
+
+        <div id="team-id" th:text="${team.id}" style="display:hidden"> </div>
         <script>
             var pieces = [];
             const canvas = document.getElementById("pieces");
@@ -126,20 +128,39 @@
             }
 
             function save() {
-                fetch("/save", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(pieces),
-                })
-                .then(response => {
-                    return response.text();
-                })
-                .then(loc => {
-                    window.location.href = `/${loc}`;
-                })
-                .catch(error => console.error("Error:", error));
+                const team = document.getElementById("team-id").textContent;
+                if(team == ""){
+                    fetch(`/saveNew`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(pieces),
+                    })
+                    .then(response => {
+                        return response.text();
+                    })
+                    .then(loc => {
+                        window.location.href = `/${loc}`;
+                    })
+                    .catch(error => console.error("Error:", error));
+                }
+                else{
+                    fetch(`/save?id=${team}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(pieces),
+                    })
+                    .then(response => {
+                        return response.text();
+                    })
+                    .then(loc => {
+                        window.location.href = `/${loc}`;
+                    })
+                    .catch(error => console.error("Error:", error));
+                }
             }
         </script>
     </body>

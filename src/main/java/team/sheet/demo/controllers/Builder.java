@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import team.sheet.demo.models.Piece;
 import team.sheet.demo.models.Team;
 import team.sheet.demo.models.User;
+import team.sheet.demo.repositories.PieceRepository;
 import team.sheet.demo.repositories.TeamRepository;
 import team.sheet.demo.repositories.UserRepository;
 
@@ -27,6 +28,9 @@ public class Builder {
 
     @Autowired
     TeamRepository teamRepository;
+
+    @Autowired
+    PieceRepository pieceRepository;
 
 
     @GetMapping("/builder")
@@ -58,11 +62,40 @@ public class Builder {
 
     @PostMapping("/save")
     @ResponseBody
-    public String save(@RequestBody List<Piece> pieces) {
-        for (Piece piece : pieces){
-            System.out.println(piece.getX() + " " + piece.getY());
+    public String save(@RequestBody List<Piece> pieces, @RequestParam Long id, HttpSession session) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if(user == null){
+            return "teams";
+        }
+        System.out.println("Here:" + id);
+        List<Team> teams = teamRepository.findByUserId(user.getId());
+        for(Team team : teams){
+            if(team.getId() == id){
+                team.setPieces(pieces);
+                for(Piece piece : pieces){
+                    piece.setTeam(team);
+                }
+                teamRepository.save(team);
+            }
         }
         return "teams";
     }
+    
+    @PostMapping("/saveNew")
+    @ResponseBody
+    public String postMethodName(@RequestBody List<Piece> pieces, HttpSession session) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if(user == null){
+            return "teams";
+        }
+        Team team = new Team("newTeam", "This is a new Team");
+        team.setPieces(pieces);
+        for(Piece piece : pieces){
+            piece.setTeam(team);
+        }
+        teamRepository.save(team);
+        return "teams";
+    }
+    
     
 }

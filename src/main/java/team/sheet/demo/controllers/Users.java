@@ -46,14 +46,22 @@ public class Users {
     
     @GetMapping("/init")
     public ResponseEntity<Map<String, String>> init() {
+         
+        System.out.println("Start of init");
+        pieceRepository.deleteAll();
+        System.out.println("After piece delete");
+
         teamRepository.deleteAll();
         userRepository.deleteAll();
-        pieceRepository.deleteAll();
+        System.out.println("After all deletes");
+        
+        //jdbcTemplate.execute("ALTER TABLE pieces ADD COLUMN size int DEFAULT 0");
         jdbcTemplate.execute("ALTER TABLE users ALTER COLUMN id RESTART WITH 1");
         jdbcTemplate.execute("ALTER TABLE teams ALTER COLUMN id RESTART WITH 1");
         jdbcTemplate.execute("ALTER TABLE pieces ALTER COLUMN id RESTART WITH 1");
         
         Utility.dummyData(userRepository);
+        
         Map<String, String> response = new HashMap<>();
         response.put("message", "db initialized");
         return ResponseEntity.ok(response);
