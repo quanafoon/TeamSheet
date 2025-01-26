@@ -41,7 +41,7 @@
                     <b>Squad Builder</b>
                 </div>  
                 <ul id="nav-mobile" class="right">
-                    <li><button style="background-color:#28b97d" class="btn modal-trigger" data-target="modal-1"> Save </button>
+                    <li><button style="background-color:#28b97d" class="btn modal-trigger" data-target="modal-1"> Save </button></li>
                     <li><a href="/logout" style="background-color:#e12828"class="btn"> Log out </a></li>
                 </ul>
             </div>
@@ -55,6 +55,11 @@
                 <h1>Team</h1>
                 <button onclick="addRed()" class="btn-large">Add Red Player</button>
                 <button onclick="addBlue()" class="btn-large">Add Blue Player</button>
+                <h2>Formations </h2>
+                <a href="#" class="dropdown-trigger btn" data-target="dropdown-1"> Select for Red Team </a>
+                <a href="#" class="dropdown-trigger btn" data-target="dropdown-2"> Select for Blue Team </a>
+                <p id="test">  </p>
+
             </div>
         </div>
 
@@ -67,19 +72,27 @@
                 <input id="name" th:attr="value=${team.name}" placeholder="Enter name..."/>
                 <input id="description" th:attr="value=${team.description}" placeholder="Enter Description..."/>
                 <a onclick="save()" style="background-color:#28b97d" class="btn"> Save </a>
-
             </div>
         </div>
+            
+        <ul id="dropdown-1" class="dropdown-content">
+            <li><a href="#!"> 433 Attack </a></li>
+            <li><a href="#!"> 433 Holding </a></li>
+            <li><a href="#!"> 433 Defence </a></li>
+        </ul>
+
+        <ul id="dropdown-2" class="dropdown-content">
+            <li onclick="buildFormation('attack433','blue')"><a href="#!"> 433 Attack </a></li>
+            <li><a href="#!"> 433 Holding </a></li>
+            <li><a href="#!"> 433 Defence </a></li>
+        </ul>
 
         <div id="team-id" th:text="${team.id}" style="display:none"> </div>
-        
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
         <script>
             const team = document.getElementById("team-id").textContent;
             var pieces = [];
-            const test = document.getElementById("test");
-            
             
             const canvas = document.getElementById("pieces");
             const ctx = canvas.getContext("2d");
@@ -219,6 +232,37 @@
                     });
                 }
             }
+
+            function buildFormation(formation, color){
+                var details = {
+                    pieces : pieces,
+                    formation : formation,
+                }
+
+                fetch(`/selectFormation?color=${color}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type' : 'application/json',
+                    },
+                    body: JSON.stringify(details),
+                })
+                .then(response => {
+                    if(response.ok){
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    pieces = [];
+                    data.forEach(piece => {
+                        pieces.push({x:piece.x, y:piece.y, size:piece.size, color:piece.color, outline:piece.outline});
+                        drawAllPieces();
+                    });
+                })
+                .catch( error => {
+                    console.log("Error catching pieces: ", error);
+                });
+            }
+
         </script>
 
         <script>
@@ -226,6 +270,11 @@
             document.addEventListener('DOMContentLoaded', function() {
                 var elems = document.querySelectorAll('.modal');
                 var instances = M.Modal.init(elems, options);
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.dropdown-trigger');
+                var instances = M.Dropdown.init(elems, options);
             });
         </script>
 
