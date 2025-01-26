@@ -67,4 +67,40 @@ public class Utility {
         team4.setPieces(pieces4);
         userRepository.save(user);
    }
+
+   public static List<Piece> get433Attack(String color){
+        Piece piece = new Piece(279, 371, 10, color, "white");
+        Piece piece2 = new Piece(210, 371, 10, color, "white");
+        Piece piece3 = new Piece(121, 371, 10, color, "white");
+        Piece piece4 = new Piece(202, 324, 10, color, "white");
+        Piece piece5 = new Piece(124, 325, 10, color, "white");
+        Piece piece6 = new Piece(167, 294, 10, color, "white");
+        Piece piece7 = new Piece(164, 434, 10, color, "white");
+        Piece piece8 = new Piece(166, 252, 10, color, "white");
+        Piece piece9 = new Piece(276, 260, 10, color, "white");
+        Piece piece10 = new Piece(50, 270, 10, color, "white");
+        Piece piece11 = new Piece(50, 370, 10, color, "white");
+
+        List<Piece> pieces = new ArrayList<>();
+        pieces.add(piece);
+        pieces.add(piece2);
+        pieces.add(piece3);
+        pieces.add(piece4);
+        pieces.add(piece5);
+        pieces.add(piece6);
+        pieces.add(piece7);
+        pieces.add(piece8);
+        pieces.add(piece9);
+        pieces.add(piece10);
+        pieces.add(piece11);
+
+        return pieces;
+    }
+
+    public static List<Piece> getFormationPieces(String formation, String color){
+        if(formation.equals("attack433")){
+            return get433Attack(color);
+        }
+        return null;
+    }
 }

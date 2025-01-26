@@ -1,7 +1,6 @@
 package team.sheet.demo.controllers;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +44,7 @@ public class Builder {
             return "redirect:/";
         }
         if(id==0){
-            Team team = new Team("newTeam", "this is a new team");
+            Team team = new Team("New Team", "this is a new team");
             model.addAttribute("team", team);
             return "builder";
         }
@@ -100,9 +99,6 @@ public class Builder {
         for(Team team : teams){
             if(team.getId() == id){
                 List<Piece> pieces = data.getPieces();
-                System.out.println("Here: " + pieces);
-                Map<String, String> details = data.getDetails();
-                System.out.println("Here: " + details);
                 pieceRepository.deleteByTeamId(id);
                 team.setPieces(pieces);
                 for(Piece piece : pieces){
