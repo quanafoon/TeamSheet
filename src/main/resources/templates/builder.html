@@ -64,8 +64,8 @@
                     <h4> Team: </h4>
                     <button style="position:absolute; right:0; top:0; background-color:red" class="btn-small material-icons modal-close">close</button>
                 </div>
-                <input id="name" placeholder="Enter name...">  </input>
-                <input id="description" placeholder="Enter Description...">  </input>
+                <input id="name" th:attr="value=${team.name}" placeholder="Enter name..."/>
+                <input id="description" th:attr="value=${team.description}" placeholder="Enter Description..."/>
                 <a onclick="save()" style="background-color:#28b97d" class="btn"> Save </a>
 
             </div>
