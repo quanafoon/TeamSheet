@@ -33,7 +33,7 @@
                 color:black;
             }
             
-            
+           
         </style>
         <nav>
             <div class="nav-wrapper">
@@ -41,7 +41,7 @@
                     <b>Squad Builder</b>
                 </div>  
                 <ul id="nav-mobile" class="right">
-                    <li><a onclick="save()" style="background-color:#28b97d" class="btn"> Save </a></li>
+                    <li><button style="background-color:#28b97d" class="btn modal-trigger" data-target="modal-1"> Save </button>
                     <li><a href="/logout" style="background-color:#e12828"class="btn"> Log out </a></li>
                 </ul>
             </div>
@@ -58,14 +58,34 @@
             </div>
         </div>
 
-        <div id="team-id" th:text="${team.id}" style="display:hidden"> </div>
+        <div id="modal-1" class="modal">
+            <div class="modal-content"> 
+                <div style="display:flex">
+                    <h4> Team: </h4>
+                    <button style="position:absolute; right:0; top:0; background-color:red" class="btn-small material-icons modal-close">close</button>
+                </div>
+                <input id="name" placeholder="Enter name...">  </input>
+                <input id="description" placeholder="Enter Description...">  </input>
+                <a onclick="save()" style="background-color:#28b97d" class="btn"> Save </a>
+
+            </div>
+        </div>
+
+        <div id="team-id" th:text="${team.id}" style="display:none"> </div>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
         <script>
+            const team = document.getElementById("team-id").textContent;
             var pieces = [];
+            const test = document.getElementById("test");
+            
+            
             const canvas = document.getElementById("pieces");
             const ctx = canvas.getContext("2d");
             let draggingPiece = null;
             
-            drawFootball();
+            loadPieces();
 
             function drawFootball(){
                 drawPiece(125, 200, 5, "white", "black")
@@ -128,14 +148,24 @@
             }
 
             function save() {
-                const team = document.getElementById("team-id").textContent;
+                const name = document.getElementById("name").value;
+                const description = document.getElementById("description").value;
+                const details = {
+                    "name" : name,
+                    "description" : description, 
+                };
+                const data = {
+                    pieces : pieces,
+                    details : details
+                };
                 if(team == ""){
                     fetch(`/saveNew`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(pieces),
+                        body: JSON.stringify(data),
+
                     })
                     .then(response => {
                         return response.text();
@@ -151,7 +181,8 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(pieces),
+                        body: JSON.stringify(data),
+
                     })
                     .then(response => {
                         return response.text();
@@ -162,6 +193,42 @@
                     .catch(error => console.error("Error:", error));
                 }
             }
+
+            function loadPieces(){
+                if(team == ""){
+                    drawFootball();
+                }
+                else{
+
+                    fetch(`teamPieces?id=${team}`, {
+                        method: 'GET',
+                    })
+                    .then( response => {
+                        if(response.ok){
+                            return response.json();
+                        }
+                    })
+                    .then( data => {
+                        data.forEach(piece => {
+                            pieces.push({x:piece.x, y:piece.y, size:piece.size, color:piece.color, outline:piece.outline});
+                            drawAllPieces();
+                        });
+                    })
+                    .catch( error => {
+                        console.log("Error catching pieces: ", error);
+                    });
+                }
+            }
         </script>
+
+        <script>
+            M.AutoInit();
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.modal');
+                var instances = M.Modal.init(elems, options);
+            });
+        </script>
+
+        
     </body>
 </html>
